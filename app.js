@@ -14,6 +14,8 @@ var users = require('./routes/users');
 
 var app = express();
 
+var request = require('request');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -65,5 +67,55 @@ app.use(function(err, req, res, next) {
   });
 });
 
+var test = db.get('devices');
+
+function addToDB(device){
+  var deviceCollection = db.get('deviceTest');
+  
+  var deviceID = device.id;
+  var latitude = device.data.location.latitude;
+  var longitude = device.data.location.longitude;
+  var light = device.data.sensors[0].value;
+  var humidity = device.data.sensors[2].value;
+  var NO2 = device.data.sensors[4].value;
+  var CO = device.data.sensors[5].value;
+
+  var data = {deviceID:deviceID,
+               location:
+                 {
+                   latitude:latitude,
+                   longitude:longitude
+                 },
+               light:light,
+               humidity:humidity,
+               NO2: NO2,
+               CO: CO
+               };
+
+  deviceCollection.findOne({deviceID:deviceID}).on('success', function (doc) {
+    if(doc === null)
+    {
+      deviceCollection.insert(data);
+    }
+    else
+    {
+      deviceCollection.update({deviceID:deviceID},data);
+    }
+  }); 
+
+}
+
+function getData(){
+  request('https://new-api.smartcitizen.me/v0/devices?near=51.5072,0.1275', function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      obj =  JSON.parse(body);
+      for(i=0; i<obj.length; i++){
+        addToDB(obj[i]);
+      }
+    }
+  });
+}
+
+var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 60000);
 
 module.exports = app;

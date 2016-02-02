@@ -116,6 +116,6 @@ function getData(){
   });
 }
 
-var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 60000);
+var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 1000);
 
 module.exports = app;

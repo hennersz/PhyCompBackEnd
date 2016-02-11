@@ -6,9 +6,21 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 // var schema = require('./app/schema');
 
+var fileName = "./secret-config.json";
+var config;
+
+try {
+  config = require(fileName);
+}
+catch (err) {
+  config = {};
+  console.log("unable to read file '" + fileName + "': ", err);
+  console.log("see secret-config-sample.json for an example");
+}
+
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/nodetest1');
+var db = monk(config.username + ':' + config.password + '@ds055945.mongolab.com:55945/pollution');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -75,7 +87,7 @@ function addToDB(device){
     return;
 
   }
-  var deviceCollection = db.get('deviceTest');  
+  var deviceCollection = db.get('pollution');  
   var deviceID = device.id;
   var latitude = device.data.location.latitude;
   var longitude = device.data.location.longitude;
@@ -114,17 +126,17 @@ function addToDB(device){
 }
 
 function getData(){
-  // request('https://new-api.smartcitizen.me/v0/devices?near=51.5072,0.1275&per_page=500', function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     obj =  JSON.parse(body);
-  //     for(i=0; i<obj.length; i++){
-  //       // addToDB(obj[i]);
-  //       if(obj[i].data.location.city === 'London'){
-  //       console.log(obj[i].data.location.latitude + ', ' + obj[i].data.location.longitude);          
-  //       }
-  //     }
-  //   }
-  // });
+   request('https://new-api.smartcitizen.me/v0/devices?near=51.5072,0.1275&per_page=500', function (error, response, body) {
+     if (!error && response.statusCode == 200) {
+       obj =  JSON.parse(body);
+       for(i=0; i<obj.length; i++){
+          addToDB(obj[i]);
+         if(obj[i].data.location.city === 'London'){
+         console.log(obj[i].data.location.latitude + ', ' + obj[i].data.location.longitude);          
+         }
+       }
+     }
+   });
   // request('http://api.erg.kcl.ac.uk/AirQuality/Hourly/MonitoringIndex/GroupName=London/Json', function(error, response, body){
   //   if(!error && response.statusCode == 200) {
   //     obj1 = JSON.parse(body);
@@ -140,18 +152,18 @@ function getData(){
   //   }
 
   // });
-  request('https://api.openaq.org/v1/measurements?city=London', function (error, response, body) {
-    if(!error && response.statusCode == 200){
-      obj = JSON.parse(body);
-      for(i = 0; i < obj.results.length; i ++){
-        console.log(obj.results[i].coordinates.latitude + ', ' + obj.results[i].coordinates.longitude);
-      }
-    }
-  });
+  //request('https://api.openaq.org/v1/measurements?city=London', function (error, response, body) {
+  // if(!error && response.statusCode == 200){
+  //    obj = JSON.parse(body);
+  //    for(i = 0; i < obj.results.length; i ++){
+  //      console.log(obj.results[i].coordinates.latitude + ', ' + obj.results[i].coordinates.longitude);
+  //    }
+  //  }
+  //});
 
 
 }
 
-var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 1000);
+var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 10000);
 
 module.exports = app;

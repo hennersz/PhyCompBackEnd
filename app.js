@@ -131,10 +131,16 @@ function getData(){
        obj =  JSON.parse(body);
        for(i=0; i<obj.length; i++){
           addToDB(obj[i]);
-         if(obj[i].data.location.city === 'London'){
-         console.log(obj[i].data.location.latitude + ', ' + obj[i].data.location.longitude);          
-         }
+         //if(obj[i].data.location.city === 'London'){
+        // console.log(obj[i].data.location.latitude + ', ' + obj[i].data.location.longitude);          
+        // }
        }
+     }
+   });
+
+   request('http://localhost:3000/api', function (error, response, body) {
+     if(!error && response.statusCode == 200) {
+       console.log(body)
      }
    });
   // request('http://api.erg.kcl.ac.uk/AirQuality/Hourly/MonitoringIndex/GroupName=London/Json', function(error, response, body){

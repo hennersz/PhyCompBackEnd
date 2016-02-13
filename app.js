@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-// var schema = require('./app/schema');
+//var schema = require('./app/schema');
 
 var fileName = "./secret-config.json";
 var config;
@@ -87,7 +87,7 @@ function addToDB(device){
     return;
 
   }
-  var deviceCollection = db.get('pollution');  
+  var deviceCollection = db.get('deviceTest');  
   var deviceID = device.id;
   var latitude = device.data.location.latitude;
   var longitude = device.data.location.longitude;
@@ -138,11 +138,6 @@ function getData(){
      }
    });
 
-   request('http://localhost:3000/api', function (error, response, body) {
-     if(!error && response.statusCode == 200) {
-       console.log(body)
-     }
-   });
   // request('http://api.erg.kcl.ac.uk/AirQuality/Hourly/MonitoringIndex/GroupName=London/Json', function(error, response, body){
   //   if(!error && response.statusCode == 200) {
   //     obj1 = JSON.parse(body);
@@ -170,6 +165,6 @@ function getData(){
 
 }
 
-var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 10000);
+var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 600000);
 
 module.exports = app;

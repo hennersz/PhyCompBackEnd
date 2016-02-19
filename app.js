@@ -6,21 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 // var schema = require('./app/schema');
 
-var fileName = "./secret-config.json";
-var config;
-
-try {
-  config = require(fileName);
-}
-catch (err) {
-  config = {};
-  console.log("unable to read file '" + fileName + "': ", err);
-  console.log("see secret-config-sample.json for an example");
-}
-
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk(config.username + ':' + config.password + '@ds055945.mongolab.com:55945/pollution');
+var db = monk(process.env.USERNAME + ':' + process.env.PASSWORD + '@ds055945.mongolab.com:55945/pollution');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

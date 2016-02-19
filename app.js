@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk(process.env.USERNAME + ':' + process.env.PASSWORD + '@ds055945.mongolab.com:55945/pollution');
+console.log(db);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

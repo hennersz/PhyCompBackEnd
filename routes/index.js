@@ -28,7 +28,7 @@ router.get('/newuser', function(req,res) {
 
 router.get('/api', function(req,res) {
   var db = req.db;
-  var collection =db.get('deviceTest');
+  var collection =db.get('pollution');
   collection.find({},function(e,docs) {
     res.end(JSON.stringify(docs));
   });

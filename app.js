@@ -8,8 +8,7 @@ var bodyParser = require('body-parser');
 
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk(process.env.USERNAME + ':' + process.env.PASSWORD + '@ds055945.mongolab.com:55945/pollution');
-console.log(db);
+var db = monk('serverUser:<b5/a$y>8/p_hZ2P[Xw(@ds055945.mongolab.com:55945/pollution');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -115,14 +114,15 @@ function addToDB(device){
 }
 
 function getData(){
-   request('https://new-api.smartcitizen.me/v0/devices?near=51.5072,0.1275&per_page=500', function (error, response, body) {
-     if (!error && response.statusCode == 200) {
-       obj =  JSON.parse(body);
-       for(i=0; i<obj.length; i++){
-          addToDB(obj[i]);
-       }
-     }
-   });
+  console.log(db);
+  request('https://new-api.smartcitizen.me/v0/devices?near=51.5072,0.1275&per_page=500', function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      obj =  JSON.parse(body);
+      for(i=0; i<obj.length; i++){
+        addToDB(obj[i]);
+      }
+    }
+  });
   // request('http://api.erg.kcl.ac.uk/AirQuality/Hourly/MonitoringIndex/GroupName=London/Json', function(error, response, body){
   //   if(!error && response.statusCode == 200) {
   //     obj1 = JSON.parse(body);

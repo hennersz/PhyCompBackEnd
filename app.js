@@ -131,9 +131,6 @@ function getData(){
        obj =  JSON.parse(body);
        for(i=0; i<obj.length; i++){
           addToDB(obj[i]);
-         if(obj[i].data.location.city === 'London'){
-         console.log(obj[i].data.location.latitude + ', ' + obj[i].data.location.longitude);          
-         }
        }
      }
    });

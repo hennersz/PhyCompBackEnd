@@ -26,6 +26,15 @@ router.get('/newuser', function(req,res) {
 	res.render('newuser', {title:'Add New User'});
 });
 
+router.get('/api', function(req,res) {
+  var db = req.db;
+  var collection =db.get('deviceTest');
+  collection.find({},function(e,docs) {
+    res.end(JSON.stringify(docs));
+  });
+});
+
+
 router.post('/adduser', function(req,res) {
 
 	var db = req.db;

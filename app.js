@@ -6,8 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //var schema = require('./app/schema');
 
-
-
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk(process.env.USER + ':' + process.env.PASS + '@ds055945.mongolab.com:55945/pollution');

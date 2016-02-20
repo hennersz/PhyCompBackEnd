@@ -153,6 +153,6 @@ function getData(){
 
 }
 
-var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 6000);
+var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 600000);
 
 module.exports = app;

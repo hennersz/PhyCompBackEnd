@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var fileName = "./secret-config.json";
 var config;
 
+
 try {
   config = require(fileName);
 }
@@ -20,7 +21,7 @@ catch (err) {
 
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/nodetest1');
+var db = monk(process.env.USER + ':' + process.env.PASS + '@ds055945.mongolab.com:55945/pollution');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -87,7 +88,7 @@ function addToDB(device){
     return;
 
   }
-  var deviceCollection = db.get('deviceTest');  
+  var deviceCollection = db.get('pollution');  
   var deviceID = device.id;
   var latitude = device.data.location.latitude;
   var longitude = device.data.location.longitude;
@@ -165,6 +166,6 @@ function getData(){
 
 }
 
-var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 600000);
+var intervalID = setInterval(function(){console.log("Interval reached"); getData();}, 6000);
 
 module.exports = app;

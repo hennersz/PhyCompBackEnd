@@ -7,96 +7,93 @@ var routes = require('../routes');
 // 2: Intel SmartCitizen API
 // 3: Data.Gov  / OpenAQ
 
+// Scheme function takes the appropriate data from the api and gets the simplified information that should be used for the response
 exports.schema = function schema (data1, data2, data3) {
 
-	var collated1 = [], collated2 = [], collated3 = [];
+    var collated1 = [], collated2 = [], collated3 = [];
+    // Standardized OpenAir Data
+    data1.LocalAuthority.forEach( function(element1, index) {
+        if(element1.Site !== undefined) {
+            if(Object.prototype.toString.call(element1.Site.Species) === '[object Array]'){
+                element1.Site.Species.forEach( function(element2, index) {
+                    collated1.push(returnSiteData(element2));
+                });                
+            }
+        }
+    });
 
-	data1.HourlyAirQualityIndex.LocalAuthority.forEach( function(element, index) {
-		collated1.push(returnSiteData(element));
-	});
+    // Standardized Intel SmartCitizen Data
 
-	data2.forEach( function(element, index) {
-		collated2.push(element);
-	});
+    data2.forEach( function(element, index) {
+        if(element.data.sensors.length >= 1){
+            collated2.push(returnDeviceData(element));
+        }
+    });
 
+    // Standardized OpenAQ Data
+
+    data3.results.forEach( function(element, index) {
+        collated3.push(returnLocationData(element));
+    });
+
+    collated2 = collated2.concat(collated3);
+    return collated1;
 }
 
-exports.collate = function collate (data1, data2, data3) {
-
-	data1.forEach( function(element1, index) {
-		data2.array.forEach( function(element2, index) {
-			if(element1.latitude)
-		});
-	});
-}
-
-// Computes the Haversine Formula on the 2 location points
-exports.haversine = function haversine (lat1, lon1, lat2, lon2) {
-
-    function toRad(x) {
-        return (x * (Math.PI / 180));
-    }
-    var R = 6731; //KM
-    var dlat = toRad(lat2 - lat1), dlon = toRad(lon2 - lon1);
-    var a = (sin(dlat / 2))^2 + cos(lat2) * (sin(dlon/2))^2;
-    var c = 2 * atan2(Math.sqrt(a), Math.sqrt(1-a));
-    var d = R * c;
-}
-
-exports.site = function returnSiteData(data) {
-
-    var reponse = {
-        "siteName": data.@SiteName, //	OpenAir Site Name
-        "latitude": data.@Latitude, //	OpenAir Site latitude
-        "longitude": data.@Longitude, //	OpenAir Site longitude
+function returnSiteData(data) {
+    var response = {
+        "siteName": data['@SiteName'], //  OpenAir Site Name
+        "datetime" : data['@BulletinDate'],
+        "latitude": data['@Latitude'], //  OpenAir Site latitude
+        "longitude": data['@Longitude'], //    OpenAir Site longitude
         "data": []
     };
     var species = [];
     if (data.Species !== undefined) {
-        species = checkSpecies(data.Species);
+        species = checkSpecies(data);
         species.forEach(function(element, index) {
             switch (element) {
                 case "NO2":
                     data.Species.forEach(function(element, index) {
-                        if (element.@SpeciesCode == "NO2") {
+                        if (element['@SpeciesCode'] == "no2") {
                             reponse.data.push({
-                                "no2": +element.@AirQualityIndex
+                                "no2": element['@AirQualityIndex']
                             });
                         }
                     });
                     break;
                 case "O3":
                     data.Species.forEach(function(element, index) {
-                        if (element.@SpeciesCode == "O3") {
+                        if (element['@SpeciesCode'] == "o3") {
                             reponse.data.push({
-                                "o3": +element.@AirQualityIndex
+                                "o3": element['@AirQualityIndex']
                             });
                         }
                     });
                     break;
                 case "SO2":
                     data.Species.forEach(function(element, index) {
-                        if (element.@SpeciesCode == "SO2") {
+                        if (element['@SpeciesCode'] == "so2") {
                             reponse.data.push({
-                                "so2": +element.@AirQualityIndex
+                                "so2": element['@AirQualityIndex']
                             });
                         }
                     });
                     break;
                 case "PM10":
                     data.Species.forEach(function(element, index) {
-                        if (element.@SpeciesCode == "PM10") {
+                        if (element['@SpeciesCode'] == "pm10") {
                             reponse.data.push({
-                                "pm10": +element.@AirQualityIndex
+                                "pm10": element['@AirQualityIndex']
                             });
                         }
                     });
                     break;
                 case "PM25":
                     data.Species.forEach(function(element, index) {
-                        if (element.@SpeciesCode == "PM25") {
+                        if (element['@SpeciesCode'] == "pm25") {
                             reponse.data.push({
-                                "pm25": +element.@AirQualityIndex
+                                "pm25": element['@AirQualityIndex']
                             });
                         }
                     });
@@ -110,36 +107,63 @@ exports.site = function returnSiteData(data) {
 
 }
 
-exports.device = function returnDeviceData(data) {
-
+function returnDeviceData(data) {
     return {
-        "deviceID": data.id, //	Intel SmartCitizen Device ID
-        "latitude": data.data.location.latitude, //	Intel SmartCitizen Latitude
-        "longitude": data.data.location.longitude, //	Intel SmartCitizen Longitude
-        "city": data.data.location.city, //	Intel SmartCitizen City (should be London)
+        "deviceID" : data.id, //    Intel SmartCitizen Device ID
+        "latitude" : data.data.location.latitude, //    Intel SmartCitizen Latitude
+        "longitude" : data.data.location.longitude, //  Intel SmartCitizen Longitude
+        "datetime" : data.last_reading_at,
         "data": [{
                 "light": data.data.sensors[0].value
-            }, //	Intel SmartCitizen value for ambient light (Lux)
+            }, //   Intel SmartCitizen value for ambient light (Lux)
             {
                 "no2": data.data.sensors[4].value
-            }, //	Intel SmartCitizen value for NO2 (KOhm / parts per million)
+            }, //   Intel SmartCitizen value for NO2 (KOhm / parts per million)
             {
                 "co": data.data.sensors[5].value
-            }, //	Intel SmartCitzien value for CO (KOhm / parts per million)
+            }, //   Intel SmartCitzien value for CO (KOhm / parts per million)
             {
                 "noise": data.data.sensors[7].value
-            } //	Intel SmartCitizen value for ambient Noise (decibels)
+            } //    Intel SmartCitizen value for ambient Noise (decibels)
         ]
     }
 
 }
 
-exports.checkspecies = function checkSpecies(data) {
+function returnLocationData(data) {
 
-    var response = [];
-
-    data.forEach(function(element, index) {
-        reponse.push(element.@SpeciesCode);
+    var responseData = {
+        "location" : data.location,
+        "latitude" : data.coordinates.latitude,
+        "longitude" : data.coordinates.longitude,
+        "datetime" : null,
+        "data" : []
+    }
+    var latestDate = "";
+    data.measurements.forEach( function(element, index) {
+        var par = element.parameter;
+        responseData.data.push({
+            par : element.value
+        });
+        if(latestDate !== element.lastUpdated) {
+            latestDate = element.lastUpdated;
+        }
     });
-    return response;
+    responseData.datetime = latestDate;
+    return responseData;
+}
+
+
+function checkSpecies(data) {
+
+    var responseData = [];
+    if(data.Species.length > 1){
+        data.Species.forEach(function(element, index) {
+            responseData.push(element['@SpeciesCode']);
+        });                
+    } else {
+        responseData.push(data.Species['@SpeciesCode']);
+    }
+    return responseData;
+
 }

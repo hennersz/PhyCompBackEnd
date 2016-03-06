@@ -130,6 +130,7 @@ function getData(){
            openaq = JSON.parse(body);
              var result = schema.schema(openair,intel,openaq);
              console.log(result);
+             console.log(result.length);
          }
        });
        }

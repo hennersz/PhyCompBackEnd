@@ -129,8 +129,9 @@ function getData(){
           if(!error && response.statusCode == 200){
            openaq = JSON.parse(body);
              var result = schema.schema(openair,intel,openaq);
-             console.log(result);
-             console.log(result.length);
+              result.forEach( function(element, index) {
+                console.log(element.data);
+             });
          }
        });
        }

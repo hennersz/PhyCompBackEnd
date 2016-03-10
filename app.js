@@ -114,6 +114,25 @@ app.use(function(err, req, res, next) {
 
 // }
 
+function convertCoords(latitude, longitude) {
+  return {type:"Point", coordinates:[parseFloat(longitude), parseFloat(latitude)]};
+}
+
+function addToDB(data){
+  var locObject = convertCoords(data.latitude, data.longitude);
+  delete data.latitude;
+  delete data.longitude;
+  data.loc = locObject;
+  
+  collection.findOne({loc:locObject}).on('success', function(doc) {
+    if(doc === null){
+      collection.insert(data);
+    }else{
+      collection.update({loc:locObject}, data);
+    }
+  });
+}
+
 function getData(){
 
   var openair, intel, openaq;
@@ -129,20 +148,14 @@ function getData(){
          request('https://api.openaq.org/v1/latest?city=London', function (error, response, body) {
           if(!error && response.statusCode == 200){
            openaq = JSON.parse(body);
-             var result = schema.schema(openair,intel,openaq);
-             // console.log(result);
-             console.log(result.length);
-             result.forEach(function(element, index){
-               if(element !== undefined){
-                 collection.findOne({"latitude": element.deviceID, "longitude": element.longitude}).on('success', function(doc) {
-                   if(doc === null){
-                     collection.insert(element);
-                   }else{
-                     collection.update({"latitude": element.deviceID, "longitude": element.longitude}, element);
-                   }
-                 })
-               }
-             })
+           var result = schema.schema(openair,intel,openaq);
+           // console.log(result);
+           console.log(result.length);
+           result.forEach(function(element, index){
+             addToDB(element);
+           });
+           console.log("added results");
+           collection.index({loc:"2dsphere"});
          }
        });
        }

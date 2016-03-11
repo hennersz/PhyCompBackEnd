@@ -8,11 +8,12 @@ var schema = require('./app/schema');
 
 var mongo = require('mongodb');
 var monk = require('monk');
+
+
 var db = monk(process.env.USER + ':' + process.env.PASS + '@ds055945.mlab.com:55945/pollution');
 var collection = db.get('pollution');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -36,7 +37,6 @@ app.use(function(req,res,next){
 });
 
 app.use('/', routes);
-app.use('/users', users);
 
 //catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -68,51 +68,6 @@ app.use(function(err, req, res, next) {
      error: {}
    });
  });
-
-// var test = db.get('devices');
-
-// function addToDB(device){
-//   if(device.data.sensors.length < 1){
-//     return;
-
-//   }
-//   var deviceCollection = db.get('pollution');  
-//   var deviceID = device.id;
-//   var latitude = device.data.location.latitude;
-//   var longitude = device.data.location.longitude;
-
-
-//   var light = device.data.sensors[0].value;
-//   var humidity = device.data.sensors[2].value;
-//   var NO2 = device.data.sensors[4].value;
-//   var CO = device.data.sensors[5].value;
-
-
-
-//   var data = {deviceID:deviceID,
-//                location:
-//                  {
-//                    latitude:latitude,
-//                    longitude:longitude
-//                  },
-//                light:light,
-//                humidity:humidity,
-//                NO2: NO2,
-//                CO: CO
-//                };
-
-//   deviceCollection.findOne({deviceID:deviceID}).on('success', function (doc) {
-//     if(doc === null)
-//     {
-//       deviceCollection.insert(data);
-//     }
-//     else
-//     {
-//       deviceCollection.update({deviceID:deviceID},data);
-//     }
-//   }); 
-
-// }
 
 function convertCoords(latitude, longitude) {
   return {type:"Point", coordinates:[parseFloat(longitude), parseFloat(latitude)]};

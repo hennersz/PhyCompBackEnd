@@ -1,9 +1,9 @@
 {
-  "name": "nodetest1",
-  "version": "0.0.0",
+  "name": "City Data Visualiser Backend",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "USER='serverUser' PASS='<b5/a$y>8/p_hZ2P[Xw(' node ./bin/www"
+    "start":node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.13.2",

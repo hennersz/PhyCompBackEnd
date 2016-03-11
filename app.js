@@ -6,9 +6,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var schema = require('./app/schema');
 
-// var mongo = require('mongodb');
-// var monk = require('monk');
-// var db = monk(process.env.USER + ':' + process.env.PASS + '@ds055945.mongolab.com:55945/pollution');
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk(process.env.USER + ':' + process.env.PASS + '@ds055945.mlab.com:55945/pollution');
+var collection = db.get('pollution');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -29,44 +30,44 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use(function(req,res,next){
-// 	req.db = db;
-// 	next();
-// });
+app.use(function(req,res,next){
+	req.db = db;
+	next();
+});
 
 app.use('/', routes);
 app.use('/users', users);
 
-// catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   var err = new Error('Not Found');
-//   err.status = 404;
-//   next(err);
-// });
+//catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
-// error handlers
+//error handlers
 
 // development error handler
 // will print stacktrace
-// if (app.get('env') === 'development') {
-//   app.use(function(err, req, res, next) {
-//     res.status(err.status || 500);
-//     res.render('error', {
-//       message: err.message,
-//       error: err
-//     });
-//   });
-// }
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
 
 // production error handler
 // no stacktraces leaked to user
-// app.use(function(err, req, res, next) {
-//   res.status(err.status || 500);
-//   res.render('error', {
-//     message: err.message,
-//     error: {}
-//   });
-// });
+app.use(function(err, req, res, next) {
+   res.status(err.status || 500);
+   res.render('error', {
+     message: err.message,
+     error: {}
+   });
+ });
 
 // var test = db.get('devices');
 
@@ -113,6 +114,25 @@ app.use('/users', users);
 
 // }
 
+function convertCoords(latitude, longitude) {
+  return {type:"Point", coordinates:[parseFloat(longitude), parseFloat(latitude)]};
+}
+
+function addToDB(data){
+  var locObject = convertCoords(data.latitude, data.longitude);
+  delete data.latitude;
+  delete data.longitude;
+  data.loc = locObject;
+  
+  collection.findOne({loc:locObject}).on('success', function(doc) {
+    if(doc === null){
+      collection.insert(data);
+    }else{
+      collection.update({loc:locObject}, data);
+    }
+  });
+}
+
 function getData(){
 
   var openair, intel, openaq;
@@ -128,12 +148,14 @@ function getData(){
          request('https://api.openaq.org/v1/latest?city=London', function (error, response, body) {
           if(!error && response.statusCode == 200){
            openaq = JSON.parse(body);
-             var result = schema.schema(openair,intel,openaq);
-             console.log(result);
-             console.log(result.length);
-              result.forEach( function(element, index) {
-                console.log(element.data);
-             });
+           var result = schema.schema(openair,intel,openaq);
+           // console.log(result);
+           console.log(result.length);
+           result.forEach(function(element, index){
+             addToDB(element);
+           });
+           console.log("added results");
+           collection.index({loc:"2dsphere"});
          }
        });
        }

@@ -29,8 +29,24 @@ router.get('/newuser', function(req,res) {
 router.get('/api', function(req,res) {
   var db = req.db;
   var collection =db.get('pollution');
-  collection.find({},function(e,docs) {
-    res.end(JSON.stringify(docs));
+  var latitude = parseFloat(req.query.latitude);
+  var longitude = parseFloat(req.query.longitude);
+  console.log(latitude);
+  console.log(longitude);
+  collection.find({
+    loc: { $near : 
+           {
+             $geometry: {type: "Point", coordinates: [longitude, latitude]},
+           }
+    }
+  }).on('success', function(doc) {
+    if(doc !== null){
+      console.log(doc[0]);
+      res.end(JSON.stringify(doc));
+    }
+    else{
+      console.log("error");
+    }
   });
 });
 

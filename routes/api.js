@@ -1,23 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) 
-{
-  res.render('index', { title: 'City Data Visualiser' });
-});
-
-router.get('/api', function(req,res) {
+router.get('/test', function(req,res) {
   var db = req.db;
   var collection =db.get('pollution');
   var latitude = parseFloat(req.query.latitude);
   var longitude = parseFloat(req.query.longitude);
   var maxDistance = parseFloat(req.query.maxDist);
-  console.log(maxDistance);
-  if(isNaN(maxDistance)){
-    maxDistance = 200;
-  }
-
   console.log(latitude);
   console.log(longitude);
   collection.find({

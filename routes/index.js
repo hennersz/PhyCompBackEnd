@@ -7,36 +7,4 @@ router.get('/', function(req, res, next)
   res.render('index', { title: 'City Data Visualiser' });
 });
 
-router.get('/api', function(req,res) {
-  var db = req.db;
-  var collection =db.get('pollution');
-  var latitude = parseFloat(req.query.latitude);
-  var longitude = parseFloat(req.query.longitude);
-  var maxDistance = parseFloat(req.query.maxDist);
-  console.log(maxDistance);
-  if(isNaN(maxDistance)){
-    maxDistance = 200;
-  }
-
-  console.log(latitude);
-  console.log(longitude);
-  collection.find({
-    loc: { $near : 
-           {
-             $geometry: {type: "Point", coordinates: [longitude, latitude]},
-             $maxDistance: maxDistance
-           }
-    }
-  }).on('success', function(doc) {
-    if(doc !== null){
-      console.log(doc[0]);
-      res.end(JSON.stringify(doc));
-    }
-    else{
-      console.log("error");
-      res.end();
-    }
-  });
-});
-
 module.exports = router;

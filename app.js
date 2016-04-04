@@ -5,18 +5,21 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var schema = require('./app/schema');
+var config = require('./_config');
 
 var mongo = require('mongodb');
 var monk = require('monk');
 
 
-var db = monk(process.env.USER + ':' + process.env.PASS + '@ds055945.mlab.com:55945/pollution');
-var collection = db.get('pollution');
-
 var routes = require('./routes/index');
 var api = require('./routes/api');
 
 var app = express();
+console.log(config.mongoURI);
+
+var db = monk(config.mongoURI[app.get('env')]);
+var collection = db.get('pollution');
+app.db = db;
 
 var request = require('request');
 

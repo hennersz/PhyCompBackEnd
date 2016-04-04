@@ -1,6 +1,10 @@
+html{
+  height: 80%;
+}
 body {
-  padding: 50px;
+  padding: 30px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  height: 100%;
 }
 
 a {
@@ -9,4 +13,8 @@ a {
 
 ul {
   list-style-type: none;
+}
+
+#map{
+  height:100%;
 }

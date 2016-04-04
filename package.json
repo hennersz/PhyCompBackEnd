@@ -14,8 +14,12 @@
     "kerberos": "0.0.18",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "request":"*",
-    "mongodb":"~1.4",
-    "monk":"*"
+    "request": "*",
+    "mongodb": "~1.4",
+    "monk": "*"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1"
   }
 }

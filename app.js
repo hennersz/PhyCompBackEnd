@@ -15,7 +15,6 @@ var routes = require('./routes/index');
 var api = require('./routes/api');
 
 var app = express();
-console.log(config.mongoURI);
 
 var db = monk(config.mongoURI[app.get('env')]);
 var collection = db.get('pollution');

@@ -128,4 +128,5 @@ function getData(){
 
 console.log('Running');
 getData();
+setInterval(getData, 600000);
 module.exports = app;

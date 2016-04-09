@@ -2,13 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) 
-{
+router.get('/', function(req, res, next) {
   res.render('index', { title: 'City Data Visualiser' });
 });
 
-router.get('/map', function(req, res, next)
-{
+router.get('/map', function(req, res, next) {
   var collection = req.db.get('pollution');
   collection.find({
     loc: { 
@@ -20,6 +18,10 @@ router.get('/map', function(req, res, next)
   }, function(e,doc){
     res.render('map', {title: 'Points map', data: doc});
   });
+});
+
+router.get('/docs', function(req,res,next) {
+  res.sendfile('public/Docs/index.html');
 });
 
 module.exports = router;

@@ -1,0 +1,1 @@
+define({  "Title": "Docs",  "name": "city_data_visualiser",  "version": "0.0.1",  "description": "",  "sampleUrl": false,  "apidoc": "0.2.0",  "generator": {    "name": "apidoc",    "time": "2016-04-09T14:28:45.073Z",    "url": "http://apidocjs.com",    "version": "0.15.1"  }});

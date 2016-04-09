@@ -1,5 +1,5 @@
 {
-  "name": "data_vis_backend",
+  "name": "city_data_visualiser",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -21,5 +21,8 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-http": "^2.0.1"
+  },
+  "apidoc": {
+    "Title": "Docs"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "city_data_visualiser",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www"
@@ -23,6 +23,7 @@
     "chai-http": "^2.0.1"
   },
   "apidoc": {
-    "Title": "Docs"
+    "Title": "Docs",
+    "version": "0.1.0"
   }
 }

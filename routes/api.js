@@ -5,6 +5,7 @@ var router = express.Router();
  * @api {get} /api/all Request all pollution data 
  * @apiName GetAllData
  * @apiGroup pollution
+ * @apiVersion 0.1.0
  *
  * @apiParam {Number} latitiude The latitude of the point you want to get data near to
  * @apiParam {Number} longitude The longitude of the point you want to get data near to
@@ -18,6 +19,9 @@ var router = express.Router();
  * @apiSuccess {Object[]} data An array of data objects
  * @apiSuccess {Object} loc A geoJSON location object
  *
+ * @apiExample {curl} Example usage:
+ *    curl -i http://localhost/api/all?latitude=51.5073&longitude=-0.1276&maxDist=2000
+ *    
  * @apiSuccessExample Success-Response
  *    HTTP/1.1 200 OK
  *    {

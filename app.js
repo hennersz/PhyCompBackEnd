@@ -98,23 +98,23 @@ function getData(){
 
 
   request('http://api.erg.kcl.ac.uk/AirQuality/Hourly/MonitoringIndex/GroupName=London/Json', function(error, response, body){
-    if(!error && response.statusCode == 200) {
+    if (!error && response.statusCode == 200) {
       obj = JSON.parse(body);
       openair = obj.HourlyAirQualityIndex;
       request('https://new-api.smartcitizen.me/v0/devices?near=51.5072,0.1275&per_page=500', function (error, response, body) {
        if (!error && response.statusCode == 200) {
          intel =  JSON.parse(body);
          request('https://api.openaq.org/v1/latest?city=London', function (error, response, body) {
-          if(!error && response.statusCode == 200){
-           openaq = JSON.parse(body);
-           var result = schema.schema(openair,intel,openaq);
-           // console.log(result);
-           console.log(result.length);
-           result.forEach(function(element, index){
-             addToDB(element);
-           });
-           console.log("added results");
-           collection.index({loc:"2dsphere"});
+          if (!error && response.statusCode == 200){
+            openaq = JSON.parse(body);
+            var result = schema.schema(openair,intel,openaq);
+            // console.log(result);
+            console.log(result.length);
+            result.forEach(function(element, index){
+              addToDB(element);
+            });
+            console.log("added results");
+            collection.index({loc:"2dsphere"});
          }
        });
        }

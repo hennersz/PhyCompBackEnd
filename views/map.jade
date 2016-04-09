@@ -5,12 +5,7 @@ block content
   p This is a map of all sensors available
   #map
   script(type='text/javascript').
-    var map;
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat:51.5073, lng:-0.1276},
-        zoom: 10 
-      });
-    } 
+    var data = !{JSON.stringify(data)};
+  script(src='javascripts/maps.js').
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAPfIG2Vqfaxr_Qf7zCToSCjJ3iG4-CndA&callback=initMap' async defer).
 

@@ -115,6 +115,7 @@ function getData(){
             });
             console.log("added results");
             collection.index({loc:"2dsphere"});
+            console.log("Created Index");
          }
        });
        }
@@ -126,5 +127,8 @@ function getData(){
 
 
 console.log('Running');
-getData();
+if(app.get('env') !== 'test')
+{
+  getData();
+}
 module.exports = app;

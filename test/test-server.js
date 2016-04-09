@@ -21,9 +21,8 @@ describe('API', function() {
     "loc":{"type":"Point","coordinates":[-0.127758299999982,51.5073509]}
   }; 
   beforeEach(function(done){
-    collection.insert(a, function(err, doc) {
-    });
-    collection.index({loc:"2dsphere"});
+    collection.insert(a);
+    collection.index({loc:"2dsphere"}).on('complete', function(err){done()});
   });
   afterEach(function(done){
     collection.drop();

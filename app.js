@@ -96,7 +96,6 @@ function getData(){
 
   var openair, intel, openaq;
 
-
   request('http://api.erg.kcl.ac.uk/AirQuality/Hourly/MonitoringIndex/GroupName=London/Json', function(error, response, body){
     if (!error && response.statusCode == 200) {
       obj = JSON.parse(body);
@@ -124,7 +123,6 @@ function getData(){
   });
 
 }
-
 
 console.log('Running');
 if(app.get('env') !== 'test')

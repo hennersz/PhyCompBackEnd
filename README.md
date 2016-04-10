@@ -28,3 +28,4 @@ To run the tests use `mocha`
 
 ##Database
 We use mongodb for the database. When running the app as development or test you will need to have a database running locally. Once you have mongo installed run it with `mongod`
+

@@ -2,3 +2,4 @@ secret-config.json
 *.swp
 *.swo
 *~
+npm-debug.log

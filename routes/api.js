@@ -1,6 +1,44 @@
 var express = require('express');
 var router = express.Router();
-
+/**
+ * This is a comment
+ * @api {get} /api/all Request all pollution data 
+ * @apiName GetAllData
+ * @apiGroup pollution
+ * @apiVersion 0.1.0
+ *
+ * @apiParam {Number} latitiude The latitude of the point you want to get data near to
+ * @apiParam {Number} longitude The longitude of the point you want to get data near to
+ * @apiParam {Number} maxDist The maximum distance from the specified point you want data from
+ *
+ * @apiSuccess {String} _id Mongo ID of the device
+ * @apiSuccess {String} deviceID Smart citizen devce ID 
+ * @apiSuccess {String} location London air location
+ * @apiSuccess {String} siteName OpenAQ site name
+ * @apiSuccess {String} datetime The time the sensor was updated
+ * @apiSuccess {Object[]} data An array of data objects
+ * @apiSuccess {Object} loc A geoJSON location object
+ *
+ * @apiExample {curl} Example usage:
+ *    curl -i http://localhost/api/all?latitude=51.5073&longitude=-0.1276&maxDist=2000
+ *    
+ * @apiSuccessExample Success-Response
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "_id":"56fab1838d45e3a41ac1795d",
+ *      "deviceID":2276,
+ *      "datetime":"2015-07-15T10:52:14Z",
+ *      "data":[
+ *        {"no2":1},
+ *        {"co":1}
+ *      ],
+ *      "loc":{
+ *        "type":"Point",
+ *        "coordinates":[-0.127758299999982,51.5073509]
+ *      }
+ *    }
+ *
+ */
 router.get('/all', function(req,res) {
   var db = req.db;
   var collection =db.get('pollution');

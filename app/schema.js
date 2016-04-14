@@ -49,12 +49,14 @@ exports.schema = function schema(data1, data2, data3) {
 }
 
 function returnSiteData(data) {
+
     var response = {
         "latitude": data['@Latitude'], 
         "longitude": data['@Longitude'], 
         "datetime": data['@BulletinDate'],
-        "data": []
+        "data": {}
     };
+
     var species = [];
     if (data.Species !== undefined) {
         species = checkSpecies(data);
@@ -66,14 +68,12 @@ function returnSiteData(data) {
                             index) {
                             if (element['@SpeciesCode'] ==
                                 "NO2") {
-                                response.data.push({
-                                    "no2": {
+                                response.data['no2'] = {
                                         "value" : element['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                                });
+                                    };
                             }
                         });
                         break;
@@ -82,14 +82,12 @@ function returnSiteData(data) {
                             index) {
                             if (element['@SpeciesCode'] ==
                                 "O3") {
-                                response.data.push({
-                                    "o3": {
+                                response.data['o3'] = {
                                         "value" : element['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                                });
+                                    };
                             }
                         });
                         break;
@@ -98,14 +96,12 @@ function returnSiteData(data) {
                             index) {
                             if (element['@SpeciesCode'] ==
                                 "SO2") {
-                                response.data.push({
-                                    "so2": {
+                                response.data['so2'] = {
                                         "value" : element['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                                });
+                                    };
                             }
                         });
                         break;
@@ -114,14 +110,12 @@ function returnSiteData(data) {
                             index) {
                             if (element['@SpeciesCode'] ==
                                 "PM10") {
-                                response.data.push({
-                                    "pm10": {
+                                response.data['pm10'] = {
                                         "value" : element['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                                });
+                                    };
                             }
                         });
                         break;
@@ -130,14 +124,12 @@ function returnSiteData(data) {
                             index) {
                             if (element['@SpeciesCode'] ==
                                 "PM25") {
-                                response.data.push({
-                                    "pm25": {
+                                response.data['pm25'] = {
                                         "value" : element['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                                });
+                                    };
                             }
                         });
                         break;
@@ -148,62 +140,52 @@ function returnSiteData(data) {
                 switch (element) {
                     case "NO2":
                         if (data.Species['@SpeciesCode'] == "NO2") {
-                            response.data.push({
-                                "no2": {
+                            response.data['no2'] = {
                                         "value" : data.Species['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                            });
+                                    };
                         }
                         break;
                     case "O3":
                         if (data.Species['@SpeciesCode'] == "O3") {
-                            response.data.push({
-                                "o3": {
+                            response.data['o3'] = {
                                         "value" : data.Species['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                            });
+                                    };
                         }
                         break;
                     case "SO2":
                         if (data.Species['@SpeciesCode'] == "SO2") {
-                            response.data.push({
-                                "so2": {
+                            response.data['so2'] = {
                                         "value" : data.Species['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                            });
+                                    };
                         }
                         break;
                     case "PM10":
                         if (data.Species['@SpeciesCode'] == "PM10") {
-                            response.data.push({
-                                "pm10": {
+                            response.data['pm10'] = {
                                         "value" : data.Species['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                            });
+                                    };
                         }
                         break;
                     case "PM25":
                         if (data.Species['@SpeciesCode'] == "PM25") {
-                            response.data.push({
-                                "pm25": {
+                            response.data['pm25'] = {
                                         "value" : data.Species['@AirQualityIndex'],
                                         "units" : "AirQualityIndex",
                                         "raw_value" : element['@AirQualityIndex'],
                                         "raw_units" : "AirQualityIndex"
-                                    }
-                            });
+                                    };
                         }
                         break;
                     default:
@@ -216,7 +198,14 @@ function returnSiteData(data) {
 }
 
 function returnDeviceData(data) {
-    
+
+    responseData = {
+        "latitude": data.data.location.latitude, 
+        "longitude": data.data.location.longitude,
+        "datetime": data.last_reading_at,
+        "data": {}
+    };
+
     // PPM = RS / R0 where R0 = 75 (default for the intel smart citizen) 
 
     var rawno2 = data.data.sensors[4].value / 75;
@@ -236,6 +225,7 @@ function returnDeviceData(data) {
     data2 = normaliseValue(data2);
     
 
+
     var no2input = {
         "value" : data1.value,
         "units" : "AirQualityIndex",
@@ -249,69 +239,63 @@ function returnDeviceData(data) {
         "raw_value" : rawco,
         "raw_units" : "ppm"
     };
+    responseData.data['no2'] = no2input;
+    responseData.data['co'] = coinput;
 
-    responseData = {
-        "latitude": data.data.location.latitude, 
-        "longitude": data.data.location.longitude,
-        "datetime": data.last_reading_at,
-        "data": [{
-                "no2": no2input
-            },
-            {
-                "co": coinput
-            }]
-    };
     if (data.data.sensors[0].value != null) {
-        responseData.data.push({
-            "light": {
+        responseData.data['light'] =  {
                 "value" : data.data.sensors[0].value,
                 "units" : data.data.sensors[0].unit,
                 "raw_value" : data.data.sensors[0].value,
                 "raw_units" : data.data.sensors[0].unit
-            }
-        });
+            };
     }
     if (data.data.sensors[7].value != null) {
-        responseData.data.push({
-            "noise": {
+        responseData.data['noise'] = {
                 "value" : data.data.sensors[7].value,
                 "units" : data.data.sensors[7].unit,
                 "raw_value" : data.data.sensors[7].value,
                 "raw_units" : data.data.sensors[7].unit
-            }
-        });
+            };
     }
     return completeParameters(responseData);
 }
 
 function returnLocationData(data) {
+
     var responseData = {
         "latitude": data.coordinates.latitude,
         "longitude": data.coordinates.longitude,
         "datetime": null,
-        "data": []
-    }
+        "data": {}
+    };
+
     var latestDate = "";
+
     data.measurements.forEach(function(element, index) {
+
         var toconvert = {
             "name": element.parameter,
             "value": element.value
         };
+
         toconvert = normaliseValue(toconvert);
 
         var response = {};
 
-        response[toconvert.name] = {
+        responseData.data[toconvert.name] = {
             "value" : toconvert.value,
             "units" : "AirQualityIndex",
             "raw_value" : element.value,
             "raw_units" : element.unit 
         };
-        responseData.data.push(response);
+
         if (latestDate !== element.lastUpdated) {
             latestDate = element.lastUpdated;
         }
+
     });
+
     responseData.datetime = latestDate;
     return completeParameters(responseData);
 }
@@ -487,29 +471,29 @@ function completeParameters(record) {
 
     var data = record.data;
 
-    if ( !("no2" in data) ) {
-        record.data.push({"no2" : null});
+    if ( !("no2" in record.data) ) {
+        record.data['no2'] = null;
     }
-    if ( !("so2" in data) ) {
-        record.data.push({"so2" : null});
+    if ( !("so2" in record.data) ) {
+        record.data['so2'] = null;
     }
-    if ( !("o3" in data) ) {
-        record.data.push({"o3" : null});
+    if ( !("o3" in record.data) ) {
+        record.data['o3'] = null;
     }
-    if ( !("pm10" in data) ) {
-        record.data.push({"pm10" : null});
+    if ( !("pm10" in record.data) ) {
+        record.data['pm10'] = null;
     }
-    if ( !("pm25" in data) ) {
-        record.data.push({"pm25" : null});
+    if ( !("pm25" in record.data) ) {
+        record.data['pm25'] = null;
     }
-    if ( !("co" in data) ) {
-        record.data.push({"co" : null});
+    if ( !("co" in record.data) ) {
+        record.data['co'] = null;
     }
-    if ( !("light" in data) ) {
-        record.data.push({"light" : null});
+    if ( !("light" in record.data) ) {
+        record.data['light'] = null;
     }
-    if ( !("noise" in data) ) {
-        record.data.push({"noise" : null});
+    if ( !("noise" in record.data) ) {
+        record.data['noise'] = null;
     } 
 
     return record;

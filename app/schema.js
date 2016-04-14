@@ -15,13 +15,19 @@ exports.schema = function schema(data1, data2, data3) {
 
     // Standardized OpenAir Data
     data1.LocalAuthority.forEach(function(element1, index) {
-        if (element1.Site !== undefined) {
+        if (element1.Site !=    = undefined) {
             if (Array.isArray(element1.Site)) {
                 element1.Site.forEach(function(element2, index) {
-                    collated1.push(returnSiteData(element2));
+                    var nextrecord = returnSiteData(element2);
+                    if(nextrecord != null) {
+                        collated1.push(nextrecord);
+                    }
                 });
             } else {
-                collated1.push(returnSiteData(element1.Site));
+                var nextrecord = returnSiteData(element1.Site);
+                if(nextrecord != null) {
+                    collated1.push(nextrecord);
+                }
             }
         }
     });
@@ -30,14 +36,20 @@ exports.schema = function schema(data1, data2, data3) {
     // Standardized Intel SmartCitizen Data
     data2.forEach(function(element, index) {
         if (element.data.sensors.length >= 1) {
-            collated2.push(returnDeviceData(element));
+            var nextrecord = returnDeviceData(element);
+            if(nextrecord != null) {
+                collated2.push(nextrecord);
+            }
         }
     });
 
 
     // Standardized OpenAQ Data
     data3.results.forEach(function(element, index) {
-        collated3.push(returnLocationData(element));
+        var nextrecord = returnLocationData(element);
+        if(nextrecord != null) {
+             collated3.push(nextrecord);
+        }
     });
 
 
@@ -49,6 +61,10 @@ exports.schema = function schema(data1, data2, data3) {
 }
 
 function returnSiteData(data) {
+
+    if(data['@BulletinDate'] == null) {
+        return null;
+    }
 
     var response = {
         "latitude": data['@Latitude'], 
@@ -199,6 +215,10 @@ function returnSiteData(data) {
 
 function returnDeviceData(data) {
 
+    if(data.last_reading_at == null) {
+        return null;
+    }
+
     responseData = {
         "latitude": data.data.location.latitude, 
         "longitude": data.data.location.longitude,
@@ -263,14 +283,14 @@ function returnDeviceData(data) {
 
 function returnLocationData(data) {
 
+
     var responseData = {
         "latitude": data.coordinates.latitude,
         "longitude": data.coordinates.longitude,
-        "datetime": null,
         "data": {}
     };
 
-    var latestDate = "";
+    var latestDate = null;
 
     data.measurements.forEach(function(element, index) {
 
@@ -290,13 +310,12 @@ function returnLocationData(data) {
             "raw_units" : element.unit 
         };
 
-        if (latestDate !== element.lastUpdated) {
+        if (latestDate != element.lastUpdated) {
             latestDate = element.lastUpdated;
         }
 
     });
-
-    responseData.datetime = latestDate;
+    responseData['datetime'] = latestDate;
     return completeParameters(responseData);
 }
 

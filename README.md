@@ -10,6 +10,7 @@ npm install -g nodemon
 ```
 
 then start the app with `npm start` or `npm debug` to run with debugging messages
+
 This will need a mongo database running as described below.
 
 ##Database

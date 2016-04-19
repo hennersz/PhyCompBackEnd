@@ -28,3 +28,36 @@ To run the tests use `mocha`
 
 ##Database
 We use mongodb for the database. When running the app as development or test you will need to have a database running locally. Once you have mongo installed run it with `mongod`
+
+##Directory Structure
+```
+.
+├── Procfile
+├── README.md
+├── _config.js
+├── app
+│   └── schema.js
+├── app.js
+├── bin
+│   └── www
+├── node_modules
+├── package.json
+├── public
+│   ├── Docs
+│   ├── images
+│   ├── javascripts
+│   │   └── maps.js
+│   └── stylesheets
+│       └── style.css
+├── routes
+│   ├── api.js
+│   └── index.js
+├── test
+│   └── test-server.js
+└── views
+    ├── error.jade
+    ├── index.jade
+    ├── layout.jade
+    └── map.jade
+
+```

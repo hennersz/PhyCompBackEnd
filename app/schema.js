@@ -1,5 +1,6 @@
 var express = require('express');
 var routes = require('../routes');
+
 //Returns schema data from the datasets: 
 // 1: OpenAir API
 // 2: Intel SmartCitizen API
@@ -15,7 +16,7 @@ exports.schema = function schema(data1, data2, data3) {
 
     // Standardized OpenAir Data
     data1.LocalAuthority.forEach(function(element1, index) {
-        if (element1.Site !=    = undefined) {
+        if (element1.Site !== undefined) {
             if (Array.isArray(element1.Site)) {
                 element1.Site.forEach(function(element2, index) {
                     var nextrecord = returnSiteData(element2);

@@ -57,14 +57,14 @@ Mocha will run all files in the test directory.
 ##App Structure
 ```
 .
-├── Procfile
+├── Procfile //Specifies startup script for running the app like a heroku app only locally
 ├── README.md
 ├── _config.js
 ├── app
 │   └── schema.js
 ├── app.js
 ├── bin
-│   └── www
+│   └── www // sets up express app to listen on a port with some error handling code
 ├── node_modules
 ├── package.json
 ├── public

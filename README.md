@@ -61,3 +61,12 @@ We use mongodb for the database. When running the app as development or test you
     └── map.jade
 
 ```
+
+##_config.js
+This config file is used to specify the database URIs for development, testing and production. 
+it is then called in app.js in a similar way to here:
+``` javascript
+var config = require('./_config');
+var monk = require('monk');
+var db = monk(config.mongoURI[app.get('env')]);
+```

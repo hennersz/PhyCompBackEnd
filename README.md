@@ -27,7 +27,7 @@ We also make use of [chaijs](http://chaijs.com) and the chaihttp plugin but thes
 To run the tests use `mocha`
 
 ##Database
-We use mongodb for the database. When running the app as development or test you will need to have a database running locally. Once you have mongo installed run it with `mongod`
+We use mongodb for the database. When running the app as development or test you will need to have a database running locally. Once you have mongo installed run it with `mongod`. If you wish to use a database that isn't running on the default port or isn't running locally change the URI in \_config which is described below.
 
 ##Directory Structure
 ```
@@ -63,7 +63,19 @@ We use mongodb for the database. When running the app as development or test you
 ```
 
 ##_config.js
-This config file is used to specify the database URIs for development, testing and production. 
+This config file is used to specify the database URIs for development, testing and production. It will look something like this: 
+``` javascript
+var config = {};
+
+config.mongoURI = {
+  development: 'localhost:27017/pollution',
+  test: 'localhost:27017/test-data',
+  production: process.env.DBUSER + ':' + process.env.DBPASS + '@ds055945.mlab.com:55945/pollution'
+};
+
+module.exports = config;
+```
+
 it is then called in app.js in a similar way to here:
 ``` javascript
 var config = require('./_config');

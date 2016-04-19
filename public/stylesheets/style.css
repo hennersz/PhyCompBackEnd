@@ -40,7 +40,11 @@ li a:hover {
   height:100%;
 }
 
+.header {
+  height: 45px;
+}
+
 .content{
-  padding: 30px 30px;
+  padding: 0px 30px;
   height: 100%;
 }

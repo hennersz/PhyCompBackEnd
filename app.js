@@ -15,6 +15,7 @@ var routes = require('./routes/index');
 var api = require('./routes/api');
 
 var app = express();
+app.use(express.static(path.join(__dirname, 'public')));
 
 var db = monk(config.mongoURI[app.get('env')]);
 var collection = db.get('pollution');
@@ -23,7 +24,6 @@ app.db = db;
 var request = require('request');
 
 // view engine setup
-app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 

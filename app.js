@@ -18,6 +18,7 @@ process.env.PWD = process.cwd();
 
 var app = express();
 app.use(express.static(path.join(process.env.PWD, 'public')));
+app.use(express.static(path.join(process.env.PWD, 'public/Docs')));
 
 var db = monk(config.mongoURI[app.get('env')]);
 var collection = db.get('pollution');

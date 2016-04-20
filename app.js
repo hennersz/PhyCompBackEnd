@@ -61,7 +61,7 @@ if (app.get('env') === 'development') {
         'status': err.status,
         'message': err.message,
       });
-    }else{
+    }else{ //send as html page
       res.render('error', {
         message: err.message,
         error: err
@@ -79,7 +79,7 @@ app.use(function(err, req, res, next) {
        'status': res.status,
        'message': err.message,
      });
-   }else{
+   }else{ //send as html page
      res.render('error', {
        message: err.message,
        error: {}

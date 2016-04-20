@@ -14,9 +14,10 @@ var monk = require('monk');
 var routes = require('./routes/index');
 var api = require('./routes/api');
 
+process.env.PWD = process.cwd();
+
 var app = express();
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/docs',  express.static(__dirname + '/Docs'));
+app.use(express.static(path.join(process.env.PWD, 'public')));
 
 var db = monk(config.mongoURI[app.get('env')]);
 var collection = db.get('pollution');

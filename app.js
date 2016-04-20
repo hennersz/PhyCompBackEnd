@@ -56,21 +56,35 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
+    if(err.json){ //if the error occured during api call send response as json
+      res.json({
+        'status': err.status,
+        'message': err.message,
+      });
+    }else{
+      res.render('error', {
+        message: err.message,
+        error: err
+      });
+    }
   });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-   res.status(err.status || 500);
-   res.render('error', {
-     message: err.message,
-     error: {}
-   });
+  res.status(err.status || 500);
+   if(err.json){ //if the error occured during api call send response as json
+     res.json({
+       'status': res.status,
+       'message': err.message,
+     });
+   }else{
+     res.render('error', {
+       message: err.message,
+       error: {}
+     });
+   }
  });
 
 function convertCoords(latitude, longitude) {
@@ -83,7 +97,7 @@ function addToDB(data){
   delete data.longitude;
   data.loc = locObject;
   
-  collection.findOne({loc:locObject}).on('success', function(doc) {
+  collection.findOne({loc:locObject}).on('success', function(doc) { //checks if document is already in 
     if(doc === null){
       collection.insert(data);
     }else{

@@ -16,6 +16,7 @@ var api = require('./routes/api');
 
 var app = express();
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/docs',  express.static(__dirname + '/Docs'));
 
 var db = monk(config.mongoURI[app.get('env')]);
 var collection = db.get('pollution');

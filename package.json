@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www"
+    "debug": "DEBUG=* nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.13.2",

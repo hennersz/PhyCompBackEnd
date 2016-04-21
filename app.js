@@ -18,7 +18,7 @@ process.env.PWD = process.cwd();
 
 var app = express();
 app.use(express.static(path.join(process.env.PWD, 'public')));
-app.use(express.static(path.join(process.env.PWD, 'public/Docs')));
+//app.use(express.static(path.join(process.env.PWD, 'public/Docs')));
 
 var db = monk(config.mongoURI[app.get('env')]);
 var collection = db.get('pollution');
@@ -30,8 +30,7 @@ var request = require('request');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

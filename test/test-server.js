@@ -120,5 +120,56 @@ describe('API', function() {
       });
     done();
   });
-  
+  it('should give values for the specified properties', function(done) {
+    chai.request(server)
+      .get('/api/small?latitude=51.5072&longitude=-0.175&dataTypes=no2,co')
+      .end(function(err,res) {
+        res.should.have.status(200);
+        res.should.be.json;
+        res.body.should.have.property('no2');
+        res.body.should.have.property('co');
+        res.body.should.not.have.property('pm10');
+      });
+    done();
+  });
+  it('should give smaller response for sinle data type', function(done) {
+    chai.request(server)
+      .get('/api/small?latitude=51.5072&longitude=-0.175&dataTypes=no2')
+      .end(function(err, res) {
+        res.should.have.status(200);
+        res.should.be.json;
+        res.body.should.have.property('value');
+        res.body.should.have.property('units');
+        res.body.should.have.property('raw_value');
+        res.body.should.have.property('raw_units');
+      });
+    done();
+  });
+  it('should error on out of bounds properties', function(done) {
+    chai.request(server)
+      .get('/api/small?latitude=5738734&longitude=0')
+      .end(function(err, res) {
+        res.should.have.status(400);
+        res.should.be.json;
+      });
+    chai.request(server)
+      .get('/api/small?latitude=-5738734&longitude=0')
+      .end(function(err, res) {
+        res.should.have.status(400);
+        res.should.be.json;
+      });
+    chai.request(server)
+      .get('/api/small?latitude=0&longitude=23409')
+      .end(function(err, res) {
+        res.should.have.status(400);
+        res.should.be.json;
+      });
+    chai.request(server)
+      .get('/api/small?latitude=0&longitude=-2349234')
+      .end(function(err, res) {
+        res.should.have.status(400);
+        res.should.be.json;
+      });
+    done();
+  });
 });

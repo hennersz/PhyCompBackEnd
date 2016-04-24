@@ -108,7 +108,7 @@ function addToDB(data){
   });
 }
 
-function getData(){
+app.getData = function getData(){
 
 
   var openair, intel, openaq;

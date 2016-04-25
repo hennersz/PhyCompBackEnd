@@ -173,3 +173,72 @@ describe('API', function() {
     done();
   });
 });
+
+describe('Database insertion code', function(){
+  
+  var collection = server.db.get('pollution');
+  before(function(done){
+    for(i in testData)
+    {
+      collection.insert(testData[i]);
+    }
+    collection.index({loc:"2dsphere"}).on('complete', function(err){done()});
+  });
+  after(function(done){
+    collection.drop();
+    done();
+  });
+
+  it('should convert lat and long values to geoJSON point', function(done) {
+    var result = server.convertCoords('1.2345', '-9.87654');
+    result.should.have.property('type', 'Point');
+    result.should.have.deep.property('coordinates[0]', -9.87654);
+    result.should.have.deep.property('coordinates[1]', 1.2345);
+    done();
+  });
+
+  it('should correctly insert and update entries in database', function(done) {
+    var data1 = {
+      "datetime":"2015-03-25T20:00:38Z",
+      "data":{
+        "no2":{
+          "value":2,
+          "units":"AirQualityIndex",
+          "raw_value":0.01264,
+          "raw_units":"ppm"
+        },
+        "co":{
+          "value":1,
+          "units":"AirQualityIndex",
+          "raw_value":1.97912,
+          "raw_units":"ppm"
+        },
+        "light":{
+          "value":55.4,
+          "units":"Lux",
+          "raw_value":55.4,
+          "raw_units":"Lux"
+        },
+        "noise":{
+          "value":50,
+          "units":"dB",
+          "raw_value":50,
+          "raw_units":"dB"
+        },
+        "so2":null,
+        "o3":null,
+        "pm10":null,
+        "pm25":null,
+      },
+      "latitude":"51.5073509",
+      "longitude":"-0.127758299999982" 
+    };
+
+    server.addToDB(data1);
+    result = collection.find({}).on('success', function(doc){
+      doc.should.be.a('array');
+      doc.should.have.lengthOf(3);
+      done();
+    })
+  });
+});

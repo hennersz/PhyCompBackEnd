@@ -67,8 +67,8 @@ describe('API', function() {
       .end(function(err, res) {
         res.should.have.status(400);
         res.should.be.json;
+        done();
       });
-    done();
   });
   it('should fail on out of range parameter values on /api/all/near', function(done) {
     chai.request(server)
@@ -117,8 +117,8 @@ describe('API', function() {
         res.body.should.have.property('pm25');
         res.body.should.have.property('light');
         res.body.should.have.property('noise');
+        done();
       });
-    done();
   });
   it('should give values for the specified properties', function(done) {
     chai.request(server)
@@ -129,8 +129,8 @@ describe('API', function() {
         res.body.should.have.property('no2');
         res.body.should.have.property('co');
         res.body.should.not.have.property('pm10');
+        done();
       });
-    done();
   });
   it('should give smaller response for sinle data type', function(done) {
     chai.request(server)
@@ -142,8 +142,8 @@ describe('API', function() {
         res.body.should.have.property('units');
         res.body.should.have.property('raw_value');
         res.body.should.have.property('raw_units');
+        done();
       });
-    done();
   });
   it('should error on out of bounds properties', function(done) {
     chai.request(server)
@@ -169,8 +169,8 @@ describe('API', function() {
       .end(function(err, res) {
         res.should.have.status(400);
         res.should.be.json;
+        done();
       });
-    done();
   });
 });
 

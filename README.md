@@ -42,9 +42,9 @@ var db = monk(config.mongoURI[app.get('env')]);
 ##API docs
 To generate the API docs first you have to install [apidocsjs](http://apidocjs.com)
 
-`npm install -g apidocs`
+`npm install -g apidoc`
 
-Then run `apidocs -i routes/ -o public/Docs` to generate the files needed. This takes routes as the input directory and public/Docs as the output directory. 
+Then run `apidoc -i routes/ -o public/Docs` to generate the files needed. This takes routes as the input directory and public/Docs as the output directory. 
 
 ##Testing
 Unit testing is done using [Mochajs](http://mochajs.org) which you can install with `npm install -g mocha`

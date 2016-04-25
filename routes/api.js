@@ -19,7 +19,7 @@ var router = express.Router();
 * @apiSuccess {String} loc.type The geoJSON type which is always point
 * @apiSuccess {Number[]} loc.coordinates The coordinates of the sensor
 * @apiExample {curl} Example usage:
-*    curl -i citydatavisualiser.herokuapp.com/api/all
+*    curl -i "citydatavisualiser.herokuapp.com/api/all"
 *    
 * @apiSuccessExample Success-Response
 *    HTTP/1.1 200 OK
@@ -79,8 +79,8 @@ router.get('/all', function(req,res,next) {
 * @apiSuccess {Number[]} loc.coordinates The coordinates of the sensor
 *
 * @apiExample {curl} Example usage:
-*    curl -i citydatavisualiser.herokuapp.com/api/all/near?latitude=51.5073&longitude=-0.1276&maxDist=2000
-*    
+*    curl -i "citydatavisualiser.herokuapp.com/api/all/near?latitude=51.5073&longitude=-0.1276&maxDist=2000"
+*        
 * @apiSuccessExample Success-Response
 *    HTTP/1.1 200 OK
 *    [
@@ -168,7 +168,7 @@ function contains(value, array){
 * @apiSuccess {String} dataType.raw_units The units for the raw value
 *
 * @apiExample {curl} Example usage:
-*    curl -i citydatavisualiser.herokuapp.com/api/small?latitude=51.5073&longitude=-0.1276&dataTypes=no2,c0
+*    curl -i "citydatavisualiser.herokuapp.com/api/small?latitude=51.5073&longitude=-0.1276&dataTypes=no2,co"
 *    
 * @apiSuccessExample Success-Response
 *    HTTP/1.1 200 OK

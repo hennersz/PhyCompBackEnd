@@ -89,17 +89,17 @@ app.use(function(err, req, res, next) {
    }
  });
 
-function convertCoords(latitude, longitude) {
+app.convertCoords = function convertCoords(latitude, longitude) {
   return {type:"Point", coordinates:[parseFloat(longitude), parseFloat(latitude)]};
 }
 
-function addToDB(data){
-  var locObject = convertCoords(data.latitude, data.longitude);
+app.addToDB = function addToDB(data){
+  var locObject = app.convertCoords(data.latitude, data.longitude);
   delete data.latitude;
   delete data.longitude;
   data.loc = locObject;
   
-  collection.findOne({loc:locObject}).on('success', function(doc) { //checks if document is already in 
+  collection.findOne({loc:locObject}).on('success', function(doc) { //checks if document is already in as all locations are unique and don't change 
     if(doc === null){
       collection.insert(data);
     }else{
@@ -109,8 +109,6 @@ function addToDB(data){
 }
 
 function getData(){
-
-
   var openair, intel, openaq;
 
   request('http://api.erg.kcl.ac.uk/AirQuality/Hourly/MonitoringIndex/GroupName=London/Json', function(error, response, body){
@@ -128,7 +126,7 @@ function getData(){
             console.log(result.length);
 
             result.forEach(function(element, index){
-              addToDB(element);
+              app.addToDB(element);
             });
             console.log("added results");
             collection.index({loc:"2dsphere"});
@@ -145,4 +143,3 @@ console.log('Running');
 getData();
 setInterval(getData, 600000);
 module.exports = app;
-

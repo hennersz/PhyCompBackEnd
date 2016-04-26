@@ -100,8 +100,8 @@ describe('API', function() {
       .end(function(err, res) {
         res.should.have.status(400);
         res.should.be.json;
+        done();
       });
-    done();
   });
   it('should give nearest value for all data types on /api/small', function(done) {
     chai.request(server)

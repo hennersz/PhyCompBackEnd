@@ -94,3 +94,26 @@ The public directory contains all the static files that are needed. This is not 
 The routes Directory contains all the express routing code.
 
 Views containes all the [jade](http://jade-lang.com) files for the views. Each view inherits from layout.jade which contains some features that are common to all other views.
+
+##Schema
+All the data we get from the various sources has to be converted to a single format so all data recieved from the API is consistent. The schema is in this form: 
+``` javascript
+{
+  "datetime":"2015-07-15T10:52:14Z",
+  "data":{
+    "no2":{"value":1,"units":"AirQualityIndex","raw_value":0.27176,"raw_units":"ppm"},
+    "co":{"value":1,"units":"AirQualityIndex","raw_value":6.1601333333333335,"raw_units":"ppm"},
+    "light":{"value":49.8,"units":"Lux","raw_value":49.8,"raw_units":"Lux"},
+    "noise":{"value":50,"units":"dB","raw_value":50,"raw_units":"dB"},
+    "so2":null,
+    "o3":null,
+    "pm10":null,
+    "pm25":null
+  },
+  latitude:51.5073509,
+  longitude:-0.127758299999982
+}
+
+```
+Some important features to note when adding new data sources into the schema is that the data object must have entries for all polluton types even if the data source doesnt provide that kind of pollution. Instead add it as a null value. We also convert the raw value for polluton into a 1 to 10 scale. `normaliseValue(data)` in schema.js can do the conversion for the pollution types we currently support but you will have to add in your own calculations for other pollutuion types. 
+The `schema()` function in schema.js is the interface between the data recieved from the API and our schema. To add a new data set to the API you will have to write your own function that can convert a record into our schemas format then call it inside `schema()` on each record from the data set. You also need to pass the data set as an extra argument to `schema()` which is called in app.js
